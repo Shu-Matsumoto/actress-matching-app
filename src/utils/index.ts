@@ -1,3 +1,8 @@
+// APIリクエストを行うfetch関数のラッパーメソッド
+/**
+ * @param resource 送信先パス
+ * @param init 初期化オプション
+ */
 export const fetcher = async (
   resource: RequestInfo,
   init?: RequestInit,

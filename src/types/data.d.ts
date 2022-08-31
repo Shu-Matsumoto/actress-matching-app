@@ -30,3 +30,15 @@ export type Product = {
 export type ApiContext = {
   apiRootUrl: string
 }
+
+// ダミーAPIリクエスト時のパラメータデータ
+export type DummyApiRequestParams = {
+	dataNumber: number
+  dataString: string
+}
+
+// ダミーAPIレスポンス時のデータ
+export type DummyApiResponseData = {
+	dataNumber: number
+  dataString: string
+}

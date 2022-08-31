@@ -1,13 +1,16 @@
 import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import Link from 'next/link'
 import Text from 'components/atoms/Text'
+import Button from 'components/atoms/Button'
 import Box from 'components/layout/Box'
 import Flex from 'components/layout/Flex'
 import ProductCard from 'components/organisms/ProductCard'
 import ProductCardCarousel from 'components/organisms/ProductCardCarousel'
 import Layout from 'components/templates/Layout'
 import getAllProducts from 'services/products/get-all-products'
-import { ApiContext, Product } from 'types'
+import { ApiContext, Product, DummyApiResponseData } from 'types'
+import CallDummyApi from 'services/dummy'
+import { useState } from 'react'
 
 type HomePageProps = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -15,7 +18,18 @@ const HomePage: NextPage<HomePageProps> = ({
   bookProducts,
   clothesProducts,
   shoesProducts,
+  dummyNumber,
 }: HomePageProps) => {
+  const [clickedCount, setClickedCount] = useState(0);
+
+  const renderDummyData = (dummyData: DummyApiResponseData) => {
+    return (
+      <>
+        <p>{dummyData.dataNumber}</p>
+        <p>{dummyData.dataString}</p>
+      </>
+    )
+  }
   // 商品カードカルーセルをレンダリング
   const renderProductCardCarousel = (products: Product[]) => {
     return (
@@ -39,7 +53,20 @@ const HomePage: NextPage<HomePageProps> = ({
     )
   }
 
+  const handleClick = () => {
+    //console.log(dummyNumber.dataNumber);
+    // ダミーAPI呼び出し
+    const apiContext: ApiContext = {
+      apiRootUrl: process.env.SELF_API_URL || 'http://localhost:3000/api',
+    }
+    setClickedCount(clickedCount+1);
+    CallDummyApi(apiContext, { dataNumber: clickedCount, dataString: "" });
+    }
+
   return (
+    <>
+    <Button onClick={handleClick} variant='primary'>Refresh</Button>
+    <p>{clickedCount}</p>
     <Layout>
       <Flex padding={2} justifyContent="center" backgroundColor="primary">
         <Flex
@@ -105,7 +132,8 @@ const HomePage: NextPage<HomePageProps> = ({
           </Box>
         </Box>
       </Flex>
-    </Layout>
+      </Layout>
+      </>
   )
 }
 
@@ -113,12 +141,17 @@ export const getStaticProps: GetStaticProps = async () => {
   const context: ApiContext = {
     apiRootUrl: process.env.API_BASE_URL || 'http://localhost:5000',
   }
+  // ダミーAPI呼び出し
+  const apiContext: ApiContext = {
+    apiRootUrl: process.env.SELF_API_URL || 'http://localhost:3000/api',
+  }
   // 各商品のトップ6個を取得し、静的ページを作成
   // 60秒でrevalidateな状態にし、静的ページを更新する
-  const [clothesProducts, bookProducts, shoesProducts] = await Promise.all([
+  const [clothesProducts, bookProducts, shoesProducts, dummyNumber] = await Promise.all([
     getAllProducts(context, { category: 'clothes', limit: 6, page: 1 }),
     getAllProducts(context, { category: 'book', limit: 6, page: 1 }),
     getAllProducts(context, { category: 'shoes', limit: 6, page: 1 }),
+    CallDummyApi(apiContext, { dataNumber: -1, dataString: "" }),
   ])
 
   return {
@@ -126,6 +159,7 @@ export const getStaticProps: GetStaticProps = async () => {
       clothesProducts,
       bookProducts,
       shoesProducts,
+      dummyNumber,
     },
     revalidate: 60,
   }
