@@ -30,26 +30,4 @@ const CallDummyApi = async (
   )
 }
 
-// /**
-//  * APIクライアント
-//  * @param context APIコンテキスト
-//  * @param params パラメータ
-//  * @returns レスポンスデータ
-//  */
-// const CallDummyApi = async (
-// 	context: ApiContext,
-//   params: DummyApiRequestParams,
-// ): DummyApiResponseData => {
-
-// 	let data: DummyApiResponseData = {dataNumber: 0, dataString: ""};
-// 	// await callDummyApi(context, params)
-// 	// 	.then((response) => {
-// 	// 		data = response;
-// 	// 		//console.log(response);
-// 	// 		//console.log(data);
-// 	// 	});
-// 	// console.log(data);
-// 	return data;
-// }
-
 export default CallDummyApi
