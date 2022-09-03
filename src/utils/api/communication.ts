@@ -52,12 +52,16 @@ export const ApiRequestFetcher = async (
 export const RegistrationUser = async (
   context: ApiContext,
   params : UserTypes.UserData,
-): Promise<UserTypes.AppResult> => {
+): Promise<{ result: UserTypes.AppResult, userData: UserTypes.UserData }> => {
   const address = `${context.apiRootUrl.replace(/\/$/g, '')}/users/registration`;
   console.log("API Start:[/users/registration]");
-  const apiResult = await ApiRequestFetcher(address, ApiRequestType.POST, params);
+  const apiResult: { result: Data.Result, data: UserTypes.UserData } =
+    await ApiRequestFetcher(address, ApiRequestType.POST, params);
   console.log("API End:[/users/registration]");
-  return ErrorCodeTranslator.ToAppResult(apiResult);
+  return {
+    result: ErrorCodeTranslator.ToAppResult(apiResult.result),
+    userData: apiResult.data
+  };
 }
 
 /**
@@ -69,12 +73,16 @@ export const RegistrationUser = async (
 export const Login = async (
   context: ApiContext,
   params : UserTypes.LoginParams,
-): Promise<UserTypes.AppResult> => {
+): Promise<{ result: UserTypes.AppResult, userData: UserTypes.UserData }> => {
   const address = `${context.apiRootUrl.replace(/\/$/g, '')}/auth/login`;
   console.log("API Start:[/auth/login]");
-  const apiResult = await ApiRequestFetcher(address, ApiRequestType.POST, params);
+  const apiResult: { result: Data.Result, data: UserTypes.UserData } =
+    await ApiRequestFetcher(address, ApiRequestType.POST, params);
   console.log("API End:[/auth/login]");
-  return ErrorCodeTranslator.ToAppResult(apiResult);
+  return {
+    result: ErrorCodeTranslator.ToAppResult(apiResult.result),
+    userData: apiResult.data
+  };
 }
 
 /**
@@ -87,13 +95,14 @@ export const GetActorProfile = async (
   context: ApiContext,
   params : number,
 ): Promise<{ result: UserTypes.AppResult, data: UserTypes.ActorData} > => {
-  const address = `${context.apiRootUrl.replace(/\/$/g, '')}/users/registration`;
-  console.log("API Start:[/users/registration]");
-  const apiResult = await ApiRequestFetcher(address, ApiRequestType.POST, params);
-  console.log("API End:[/users/registration]");
+  const address = `${context.apiRootUrl.replace(/\/$/g, '')}/users/getActorProfile`;
+  console.log("API Start:[/users/getActorProfile]");
+  const apiResult: { result: Data.Result, data: UserTypes.ActorData } =
+    await ApiRequestFetcher(address, ApiRequestType.POST, params);
+  console.log("API End:[/users/getActorProfile]");
   return {
-    result: ErrorCodeTranslator.ToAppResult(apiResult),
-    data: new UserTypes.ActorData(),
+    result: ErrorCodeTranslator.ToAppResult(apiResult.result),
+    data: apiResult.data,
   };
 }
 

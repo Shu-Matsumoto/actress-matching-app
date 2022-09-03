@@ -16,6 +16,7 @@ export class ErrorCodeTranslator{
 
 		// エラー変換
 		if (code.Code != ErrorCode.Success) {
+			if (code.SubCode)
 			result.Code = AppErrorCode.Error;
 			result.SubCode = AppErrorSubCode.Error;
 		}

@@ -49,10 +49,11 @@ export class DBAccessor{
 	/**
 	 * ユーザ認証
 	 */
-	public static async AuthUser(user: UserTypes.LoginParams): Promise<{ result: DBAccessCode, pass: boolean }> {
+	public static async AuthUser(user: UserTypes.LoginParams):
+		Promise<{ result: DBAccessCode, pass: boolean, userData: UserTypes.UserData }> {
 		let result = DBAccessCode.Success;
 		let pass = true;
-		const matchUser = await DBAccessor.prisma.user.findMany({
+		const matchUser = await DBAccessor.prisma.user.findFirst({
 			where: {
 				AND: {
 					name: user.Name,
@@ -64,23 +65,52 @@ export class DBAccessor{
 		//console.log(matchUser);
 
 		// 一致ユーザのチェック
-		if (matchUser.length <= 0) {
+		if (matchUser == null) {
 			console.log("Auth fail.");
 			pass = false;
 		}
 		else {
 			console.log("Auth pass.");
 		}
-
-		return { result: result, pass: pass };
+		const userData = new UserTypes.UserData();
+		userData.SetData(matchUser);
+		return {
+			result: result,
+			pass: pass,
+			userData: userData,
+		};
 	}
 	/**
 	 * 女優プロフィール取得
 	 */
-	public static async GetActorProfile(id: number): Promise<DBAccessCode> {
+	public static async GetActorProfile(id: number)
+		:Promise<{ result: DBAccessCode, userFind: boolean, data: UserTypes.ActorData }> {
 		let result = DBAccessCode.Success;
-		return result;
-	}
+		let userFind = true;
+		let data = new UserTypes.ActorData();
+		const matchUser = await DBAccessor.prisma.user.findFirst({
+			where: {
+				id: id,
+			},
+			include: {
+				profile: true,
+				playCondition1: true,
+			},
+		});
+
+		// 一致ユーザのチェック
+		if (matchUser == null) {
+			console.log("User with the specified number does not exist.");
+			userFind = false;
+		}
+		else {
+			data.User.SetData(matchUser);
+			data.Profile.SetData(matchUser.profile);
+			data.PlayCondition1.SetData(matchUser.playCondition1);
+		}
+
+		return { result: result, userFind: userFind, data: data };
+}
 
 	/**
 	 * 女優プロフィール更新

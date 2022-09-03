@@ -1,3 +1,5 @@
+import * as DBModels from '@prisma/client'
+
 /** 
  * エラーコード
 */
@@ -11,7 +13,8 @@ export enum AppErrorCode{
 */
 export enum AppErrorSubCode{
   None = 0,
-	Error = 1,
+  Error = 1,
+  NotFoundUserData,
 }
 
 /**
@@ -103,6 +106,17 @@ export class UserData {
   public IsAdmin: boolean = false;
   // 削除フラグ
   public IsDeleted: boolean = false;
+  // DB取得データをセット
+  public SetData(data: DBModels.User | null): void{
+    if (data == null) { return }
+    this.Id = data.id;
+    this.Name = data.name;
+    this.Password = data.password;
+    this.Open = data.open ? true : false;
+    this.Type = data.type;
+    this.IsAdmin = data.is_admin ? true : false;
+    this.IsDeleted = data.is_deleted ? true : false;
+  }
 }
 /**
  * ログインリクエストパラメータ
@@ -143,6 +157,23 @@ export class ActorProfileData {
   public WaistSize: number = 60;
   // ヒップサイズ(cm)
   public HipSize: number = 80;
+  // DB取得データをセット
+  public SetData(data: DBModels.ActorProfile | null): void{
+    if (data == null) { return }
+    this.ActressName = data.actress_name;
+    this.RealName = data.real_name;
+    this.Birthday = data.birthday;
+    this.BloodType = data.blood_type;
+    this.Height = data.height;
+    this.Weight = data.weight;
+    this.ClothesSize = data.clothes_size;
+    this.ShoesSize = data.shoes_size;
+    this.BreastSize = data.breast_size;
+    this.BreastTopSize = data.breast_top;
+    this.BreastUnderSize = data.breast_under;
+    this.WaistSize = data.waist_size;
+    this.HipSize = data.hip_size;
+  }
 }
 /**
  * プレイ条件１
@@ -158,6 +189,15 @@ export class PlayCondition1Data {
   public Ferachio: boolean = false;
   // イラマチオ
   public Iramachio: boolean = false;
+  // DB取得データをセット
+  public SetData(data: DBModels.PlayCondition1 | null): void{
+    if (data == null) { return }
+    this.Honban = data.honban ? true : false;
+    this.Gomunashi = data.gomunashi ? true : false;
+    this.Nakadashi = data.nakadashi ? true : false;
+    this.Ferachio = data.ferachio ? true : false;
+    this.Iramachio = data.iramachio ? true : false;
+  }
 }
 
 /**

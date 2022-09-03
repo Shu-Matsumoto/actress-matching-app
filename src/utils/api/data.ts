@@ -23,7 +23,8 @@ export enum ErrorCode{
 */
 export enum ErrorSubCode{
   None = 0,
-	Error = 1,
+  Error = 1,
+  NotFoundUserData = 2,
 }
 
 /**
