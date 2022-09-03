@@ -3,7 +3,7 @@
  */
 
 import { ApiContext, DummyApiRequestParams, DummyApiResponseData } from 'types'
-import { ApiRequestFetcher } from 'utils/communication'
+import { ApiRequestFetcher } from 'utils/api/communication'
 
 /**
  * APIクライアント
