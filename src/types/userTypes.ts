@@ -14,7 +14,9 @@ export enum AppErrorCode{
 export enum AppErrorSubCode{
   None = 0,
   Error = 1,
-  NotFoundUserData,
+  DuplicateUser = 2, // ユーザ重複
+  UserLoginFail = 3, // ユーザログイン失敗
+  NotFoundUserData = 4, // ユーザーデータなし
 }
 
 /**
@@ -132,31 +134,49 @@ export class LoginParams {
  */
 export class ActorProfileData {
   // 女優名
-  public ActressName: string = "ジーズ花子";
+  public ActressName: string = "";
   // 本名
-  public RealName: string = "アカデミー桜"
+  public RealName: string = "";
   // 誕生日
-  public Birthday: Date = new Date(1900,1,1);
+  public Birthday: Date = new Date();
   // 血液型
   public BloodType: BloodType = BloodType.A;
   // 身長(cm)
-  public Height: number = 150
+  public Height: number = 0;
   // 体重(kg)
-  public Weight: number = 40;
+  public Weight: number = 0;
   // 服サイズ
   public ClothesSize: ClothesSizeType = ClothesSizeType.S;
   // 靴サイズ(cm)
-  public ShoesSize: number = 22;
+  public ShoesSize: number = 0;
   // バストサイズ(cm)
   public BreastSize: BreastSizeType = BreastSizeType.A;
   // バストトップサイズ(cm)
-  public BreastTopSize: number = 80;
+  public BreastTopSize: number = 0;
   // バストアンダーサイズ(cm)
-  public BreastUnderSize: number = 75;
+  public BreastUnderSize: number = 0;
   // ウェストサイズ(cm)
-  public WaistSize: number = 60;
+  public WaistSize: number = 0;
   // ヒップサイズ(cm)
-  public HipSize: number = 80;
+  public HipSize: number = 0;
+  // ダミーデータ作成
+  public static CreateDummyData(): ActorProfileData {
+    let instance = new ActorProfileData();
+    instance.ActressName = "ジーズ花子";
+    instance.RealName = "アカデミー桜";
+    instance.Birthday = new Date(2000,1,1);
+    instance.BloodType = BloodType.A;
+    instance.Height = 155;
+    instance.Weight = 43;
+    instance.ClothesSize = ClothesSizeType.S;
+    instance.ShoesSize = 22;
+    instance.BreastSize = BreastSizeType.C;
+    instance.BreastTopSize = 80;
+    instance.BreastUnderSize = 75;
+    instance.WaistSize = 60;
+    instance.HipSize = 80;
+    return instance;
+  }
   // DB取得データをセット
   public SetData(data: DBModels.ActorProfile | null): void{
     if (data == null) { return }
@@ -189,6 +209,16 @@ export class PlayCondition1Data {
   public Ferachio: boolean = false;
   // イラマチオ
   public Iramachio: boolean = false;
+  // ダミーデータ作成
+  public static CreateDummyData(): PlayCondition1Data {
+    let instance = new PlayCondition1Data();
+    instance.Honban = false;
+    instance.Gomunashi = false;
+    instance.Nakadashi = false;
+    instance.Ferachio = false;
+    instance.Iramachio = false;
+    return instance;
+  }
   // DB取得データをセット
   public SetData(data: DBModels.PlayCondition1 | null): void{
     if (data == null) { return }

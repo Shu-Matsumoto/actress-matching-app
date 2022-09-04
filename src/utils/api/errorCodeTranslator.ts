@@ -16,9 +16,19 @@ export class ErrorCodeTranslator{
 
 		// エラー変換
 		if (code.Code != ErrorCode.Success) {
-			if (code.SubCode)
 			result.Code = AppErrorCode.Error;
-			result.SubCode = AppErrorSubCode.Error;
+			if (code.SubCode == ErrorSubCode.DuplicateUser) {
+				result.SubCode = AppErrorSubCode.DuplicateUser;
+			}
+			else if (code.SubCode == ErrorSubCode.UserLoginFail) {
+				result.SubCode = AppErrorSubCode.UserLoginFail;
+			}
+			else if (code.SubCode == ErrorSubCode.NotFoundUserData) {
+				result.SubCode = AppErrorSubCode.NotFoundUserData;
+			}
+			else {
+				result.SubCode = AppErrorSubCode.Error;
+			}
 		}
 		return result;
 	}

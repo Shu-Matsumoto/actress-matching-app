@@ -67,6 +67,7 @@ const HomePage: NextPage<HomePageProps> = ({
     <>
     <a href="/test/registrationUserForm">ユーザ登録</a><br></br>
     <a href="/test/loginForm">ユーザログイン</a><br></br>
+    <a href="/test/getUserDataForm">ユーザデータ取得</a><br></br>
     <Button onClick={handleClick} variant='primary'>Refresh</Button>
     <p>{clickedCount}</p>
     <Layout>

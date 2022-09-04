@@ -55,12 +55,13 @@ export const RegistrationUser = async (
 ): Promise<{ result: UserTypes.AppResult, userData: UserTypes.UserData }> => {
   const address = `${context.apiRootUrl.replace(/\/$/g, '')}/users/registration`;
   console.log("API Start:[/users/registration]");
-  const apiResult: { result: Data.Result, data: UserTypes.UserData } =
+  const apiResult: { result: Data.Result, userData: UserTypes.UserData } =
     await ApiRequestFetcher(address, ApiRequestType.POST, params);
   console.log("API End:[/users/registration]");
+  //console.log(apiResult);
   return {
     result: ErrorCodeTranslator.ToAppResult(apiResult.result),
-    userData: apiResult.data
+    userData: apiResult.userData,
   };
 }
 
@@ -76,12 +77,12 @@ export const Login = async (
 ): Promise<{ result: UserTypes.AppResult, userData: UserTypes.UserData }> => {
   const address = `${context.apiRootUrl.replace(/\/$/g, '')}/auth/login`;
   console.log("API Start:[/auth/login]");
-  const apiResult: { result: Data.Result, data: UserTypes.UserData } =
+  const apiResult: { result: Data.Result, userData: UserTypes.UserData } =
     await ApiRequestFetcher(address, ApiRequestType.POST, params);
   console.log("API End:[/auth/login]");
   return {
     result: ErrorCodeTranslator.ToAppResult(apiResult.result),
-    userData: apiResult.data
+    userData: apiResult.userData
   };
 }
 
@@ -94,15 +95,15 @@ export const Login = async (
 export const GetActorProfile = async (
   context: ApiContext,
   params : number,
-): Promise<{ result: UserTypes.AppResult, data: UserTypes.ActorData} > => {
+): Promise<{ result: UserTypes.AppResult, userData: UserTypes.ActorData} > => {
   const address = `${context.apiRootUrl.replace(/\/$/g, '')}/users/getActorProfile`;
   console.log("API Start:[/users/getActorProfile]");
-  const apiResult: { result: Data.Result, data: UserTypes.ActorData } =
+  const apiResult: { result: Data.Result, userData: UserTypes.ActorData } =
     await ApiRequestFetcher(address, ApiRequestType.POST, params);
   console.log("API End:[/users/getActorProfile]");
   return {
     result: ErrorCodeTranslator.ToAppResult(apiResult.result),
-    data: apiResult.data,
+    userData: apiResult.userData,
   };
 }
 

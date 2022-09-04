@@ -36,8 +36,8 @@ export class DBAccessor{
 		// プロフィールとプレイ条件追加(追加するユーザのタイプが女優のときだけ追加)
 		if (result == DBAccessCode.Success && user.Type == UserTypes.UserType.Actor) {
 			await Promise.all([
-				DBAccessor.createActorProfile(userId, new UserTypes.ActorProfileData()),
-				DBAccessor.createPlayCondition1(userId, new UserTypes.PlayCondition1Data()),
+				DBAccessor.createActorProfile(userId, UserTypes.ActorProfileData.CreateDummyData()),
+				DBAccessor.createPlayCondition1(userId, UserTypes.PlayCondition1Data.CreateDummyData()),
 			]).catch(error => {
 				console.log(error);
 				result = DBAccessCode.Error;
@@ -84,32 +84,33 @@ export class DBAccessor{
 	 * 女優プロフィール取得
 	 */
 	public static async GetActorProfile(id: number)
-		:Promise<{ result: DBAccessCode, userFind: boolean, data: UserTypes.ActorData }> {
+		:Promise<{ result: DBAccessCode, userFind: boolean, userData: UserTypes.ActorData }> {
+		
 		let result = DBAccessCode.Success;
-		let userFind = true;
-		let data = new UserTypes.ActorData();
-		const matchUser = await DBAccessor.prisma.user.findFirst({
-			where: {
-				id: id,
-			},
-			include: {
-				profile: true,
-				playCondition1: true,
-			},
-		});
+		let userFind = false;
+		let userData = new UserTypes.ActorData();
+		// ユーザデータ取得
+		await DBAccessor.getActorProfile(id)
+			.then(data => {
+				console.log(data);
+				if (data != null) {
+					userFind = true;
+					userData.User.SetData(data);
+					userData.Profile.SetData(data.profile);
+					userData.PlayCondition1.SetData(data.playCondition1);
+				}
+			})
+			.catch(error => {
+				console.log(error);
+				console.log("User with the specified number does not exist.");
+				userFind = false;
+			})
 
-		// 一致ユーザのチェック
-		if (matchUser == null) {
-			console.log("User with the specified number does not exist.");
-			userFind = false;
-		}
-		else {
-			data.User.SetData(matchUser);
-			data.Profile.SetData(matchUser.profile);
-			data.PlayCondition1.SetData(matchUser.playCondition1);
-		}
-
-		return { result: result, userFind: userFind, data: data };
+		return {
+			result: result,
+			userFind: userFind,
+			userData: userData,
+		};
 }
 
 	/**
@@ -187,6 +188,21 @@ export class DBAccessor{
 			},
 		})
 		return createdCondition;
+	}
+	// get actor data(Private method)
+	private static async getActorProfile(id: number):
+		Promise<(User & { profile: ActorProfile | null; playCondition1: PlayCondition1 | null; }) | null>{
+		const matchUser = await DBAccessor.prisma.user.findFirst({
+			where: {
+				// Number型で数値を渡しているつもりだがなぜか文字列として受け取られるため、Numberへキャストして渡す
+				id: Number(id),
+			},
+			include: {
+				profile: true,
+				playCondition1: true,
+			},
+		});
+		return matchUser;
 	}
 	// #endregion Private methods
 

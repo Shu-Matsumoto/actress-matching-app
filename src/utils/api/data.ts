@@ -24,7 +24,9 @@ export enum ErrorCode{
 export enum ErrorSubCode{
   None = 0,
   Error = 1,
-  NotFoundUserData = 2,
+  DuplicateUser = 2, // ユーザ重複
+  UserLoginFail = 3, // ユーザログイン失敗
+  NotFoundUserData = 4, // ユーザーデータなし
 }
 
 /**

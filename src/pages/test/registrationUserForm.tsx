@@ -7,12 +7,12 @@ export default function App() {
 	const { register, handleSubmit, formState: { errors }, } = useForm<UserTypes.UserData>()
 	const onSubmit: SubmitHandler<UserTypes.UserData> = (data) => {
 		//console.log(data)
-		// ダミーAPI呼び出し
     const apiContext: ApiContext = {
       apiRootUrl: process.env.SELF_API_URL || 'http://localhost:3000/api',
     }
 		Api.RegistrationUser(apiContext, data)
 			.then(result => {
+				console.log("API processing done.");
 				console.log(result);
 			})
 	}

@@ -5,7 +5,7 @@ import { DBAccessor, DBAccessCode } from '../../../utils/db/databaseAccessor'
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<{ result: Api.Result, user: UserTypes.UserData }>,
+  res: NextApiResponse<{ result: Api.Result, userData: UserTypes.UserData }>,
 ) {
 	// console.log("recieve request!");
 	// console.log(req.body);
@@ -17,11 +17,11 @@ export default async function handler(
 			result.SubCode = returnCode.result == DBAccessCode.Success ? Api.ErrorSubCode.None : Api.ErrorSubCode.Error;
 			if (result.Code == Api.ErrorCode.Success && !returnCode.pass) {
 				result.Code = Api.ErrorCode.Error;
-				result.SubCode = Api.ErrorSubCode.NotFoundUserData;
+				result.SubCode = Api.ErrorSubCode.UserLoginFail;
 			}
 			res.status(Api.ResponseCode.OK).json({
 				result: result,
-				user: returnCode.userData,
+				userData: returnCode.userData,
 			});
 		});
 }
